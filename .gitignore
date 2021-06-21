@@ -56,8 +56,6 @@ Logs/
 /Assets/StreamingAssets/AssetBundles
 /Assets/StreamingAssets/AssetBundles.meta
 /Assets/CLRCode
-/Assets/Plugins
-/Assets/Plugins.meta
 /Tools/vscode.code-workspace
 .vscode/
 Assets/MVVMBindingInfos/GitIngnorare/HierarchyResources.asset
