@@ -80,7 +80,7 @@ public class PawnAction : MonoBehaviour
             _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _rigidbody.velocity.y- _jumpForce);
         }
 
-        if (Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.KeypadPlus))
+        if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.KeypadPlus))
         {
             _closeCombatWeaponAction.CloseCombatBegin();
             //Debug.Log("近身攻击");

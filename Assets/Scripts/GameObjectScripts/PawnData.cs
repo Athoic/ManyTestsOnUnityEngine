@@ -1,4 +1,5 @@
 using CustomedTest.DataObjects;
+using EventArgs.Battle;
 using Repository;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using UnityEngine;
 
 public class PawnData : MonoBehaviour
 {
+    private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
     private weaponRepository _weaponRepository = weaponRepository.GetInstance();
 
     private HealthPointDO healthPointDO;
@@ -40,14 +42,39 @@ public class PawnData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
+
 
     // Update is called once per frame
     void Update()
     {
         
     }
+
+    private void OnEnable()
+    {
+        _battleEventSystem.CauseDamageEvent += BattleEventSystem_CauseDamageEvent;
+
+    }
+
+    private void OnDisable()
+    {
+        _battleEventSystem.CauseDamageEvent -= BattleEventSystem_CauseDamageEvent;
+
+    }
+
+    #endregion
+
+    #region 监听自定义事件
+
+    private void BattleEventSystem_CauseDamageEvent(CauseDamageEventArgs args)
+    {
+        if (args.Target != this.gameObject) return;
+
+        BattleSystem.GetBattleSystem().ShowDamage(this.gameObject.transform, args.Damage);
+        Debug.Log("敌人受到伤害");
+    }
+
 
     #endregion
 

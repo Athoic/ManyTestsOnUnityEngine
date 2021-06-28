@@ -29,6 +29,19 @@ public class BattleEventSystem
 
     #endregion
 
+    #region 造成伤害
+
+    public delegate void CauseDamageEventHandler(CauseDamageEventArgs args);
+    public event CauseDamageEventHandler CauseDamageEvent;
+
+    public void DispatchCauseDamageEvent(CauseDamageEventArgs args)
+    {
+        CauseDamageEvent.Invoke(args);
+    }
+
+
+    #endregion
+
     #region 限制此类为单例
 
     private BattleEventSystem() { }

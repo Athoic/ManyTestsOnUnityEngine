@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace EventArgs.Battle
 {
@@ -22,4 +23,15 @@ namespace EventArgs.Battle
         public int Remain { get; set; }
 
     }
+
+    public class CauseDamageEventArgs
+    {
+        /// <summary>
+        /// 受到伤害的对象
+        /// </summary>
+        public GameObject Target { get; set; }
+
+        public int Damage { get; set; }
+    }
+
 }

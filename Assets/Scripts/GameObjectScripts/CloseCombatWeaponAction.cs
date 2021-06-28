@@ -1,3 +1,4 @@
+using EventArgs.Battle;
 using FunctionModule;
 using System;
 using System.Collections;
@@ -6,6 +7,8 @@ using UnityEngine;
 
 public class CloseCombatWeaponAction : MonoBehaviour
 {
+    private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
+
     private Animator _animator;
     private bool _canCauseDamage { get; set; } = false;
 
@@ -14,7 +17,10 @@ public class CloseCombatWeaponAction : MonoBehaviour
     private int _actionCount = 2;
 
     private long _lastActionTime = 0;
-    private int _interval = 500;
+    private const int _interval = 500;
+
+    private bool _isCloseCombatAnimClosed = true;
+
 
     private void Awake()
     {
@@ -37,7 +43,11 @@ public class CloseCombatWeaponAction : MonoBehaviour
     {
         if (!_canCauseDamage) return;
 
-        Debug.Log("造成近战伤害");
+        CauseDamageEventArgs e = new CauseDamageEventArgs();
+        e.Target = collision.gameObject;
+        e.Damage = 10;
+        _battleEventSystem.DispatchCauseDamageEvent(e);
+        //Debug.Log("造成近战伤害");
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -47,40 +57,47 @@ public class CloseCombatWeaponAction : MonoBehaviour
 
     public void CloseCombatBegin()
     {
-        _canCauseDamage = true;
+        if (!_isCloseCombatAnimClosed && _actionOrder == _actionCount)
+            return;
 
         long nowActionTime =DateTimeModule.GetNowTimeStamp();
-        if(nowActionTime- _lastActionTime <_interval)
-        {
-            return;
-        }
-        else if(nowActionTime - _lastActionTime > 1000)
+        
+        if (nowActionTime - _lastActionTime > 1000)
         {
             _actionOrder = _startActionOrder;
         }
 
+
         _lastActionTime = nowActionTime;
 
-        if(_actionOrder== _startActionOrder)
+        if (_actionOrder == _startActionOrder)
             _animator.SetBool("GoCloseCombat", true);
 
         Debug.Log($"进行第{_actionOrder}个动作");
 
         _animator.SetInteger("CloseCombatOrder", _actionOrder++);
-        if (_actionOrder == _actionCount)
-            _actionOrder = _startActionOrder;
 
-
-        //StartCoroutine(TimerModule.SetDelayFunc())
-        //_animator.SetBool("GoCloseCombat", true);
+        _isCloseCombatAnimClosed = false;
     }
 
 
+    public void EnableDamageDetective()
+    {
+        _canCauseDamage = true;
+    }
+
+    public void DisableDamageDetective()
+    {
+        _canCauseDamage = false;
+    }
 
     public void CloseCombatEnd()
     {
-        //_canCauseDamage = false;
-        _animator.SetBool("GoCloseCombat", false);
+        if (_isCloseCombatAnimClosed) return;
 
+        _animator.SetBool("GoCloseCombat", false);
+        _actionOrder = _startActionOrder;
+
+        _isCloseCombatAnimClosed = true;
     }
 }
