@@ -4,6 +4,7 @@ using Repository;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FunctionModule;
 
 public class PawnAction : MonoBehaviour
 {
@@ -27,7 +28,17 @@ public class PawnAction : MonoBehaviour
 
     private const string _axisInput = "Horizontal";
 
-    private bool _isFacingRight = false;
+    private bool _isFacingRight = true;
+    private int _orientationValue
+    {
+        get
+        {
+            if (_isFacingRight)
+                return 1;
+            else
+                return -1;
+        }
+    }
 
     private void Awake()
     {
@@ -103,13 +114,11 @@ public class PawnAction : MonoBehaviour
 
 
         float x = Input.GetAxis(_axisInput);
-        //_rigidbody.AddForce(new Vector2(x*_moveSpeed, 0));
         _rigidbody.velocity = new Vector2(_moveSpeed * x, _rigidbody.velocity.y);
-        //transform.Translate(Vector3.right * x * _moveSpeed * Time.deltaTime, Space.World);
-        //if (x < 0 && _isFacingRight)
-        //    Filp();
-        //else if (x > 0 && !_isFacingRight)
-        //    Filp();
+        if (x < 0 && _isFacingRight)
+            Filp();
+        else if (x > 0 && !_isFacingRight)
+            Filp();
 
 
     }
@@ -133,12 +142,19 @@ public class PawnAction : MonoBehaviour
         if (weaponDataDO.Remain < _weaponRepository.GetSingleFireCount(weaponID)) 
             return;
 
-        for (int i=0,count= weaponDataDO.SingleFireCount; i < count; i++)
+        Timer timer = new Timer(() => 
         {
             Vector3 rawSpawnPos = _bulletBornPoint.transform.position;
-            Vector3 bulletSpawnPoint = new Vector3(rawSpawnPos.x+ Random.Range(-0.4f, 0.4f), rawSpawnPos.y + Random.Range(-0.2f, 0.2f), rawSpawnPos.z);
-            Instantiate(_bullet, bulletSpawnPoint, _bulletBornPoint.transform.rotation);
-        }
+            Vector3 bulletSpawnPoint = new Vector3(rawSpawnPos.x, rawSpawnPos.y + Random.Range(-0.2f, 0.2f), rawSpawnPos.z);
+            GameObject bullet = Instantiate(_bullet, bulletSpawnPoint, _bulletBornPoint.transform.rotation);
+            bullet.GetComponent<BulletAction>().HorizentalDirect = _orientationValue;
+        },
+        _weaponRepository.GetSingleInterval(weaponID),
+        weaponDataDO.SingleFireCount);
+
+        timer.StartLoop();
+        //if (!timer.StartLoop())
+        //    Debug.Log("定时器执行失败");
 
         weaponDataDO.Remain-= weaponDataDO.SingleFireCount;
 
@@ -152,6 +168,10 @@ public class PawnAction : MonoBehaviour
 
     private void Filp()
     {
-        gameObject.transform.localScale = new Vector3(-1, 1, 1);
+        _isFacingRight = !_isFacingRight;
+
+        Vector3 oldScale = gameObject.transform.localScale;
+        float scaleX = oldScale.x * (-1);
+        gameObject.transform.localScale = new Vector3(scaleX, oldScale.y, oldScale.z);
     }
 }

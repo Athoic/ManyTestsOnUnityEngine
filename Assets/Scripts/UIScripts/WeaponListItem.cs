@@ -12,7 +12,6 @@ public class WeaponListItem : MonoBehaviour
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
     private weaponRepository _weaponRepository = weaponRepository.GetInstance();
 
-    //[SerializeField] private GameObject _playerPawn;
     private const string _playerPawnGameObjectName = "GameObjectSelf(Clone)";
     private PawnData _pawnData;
 
@@ -104,7 +103,7 @@ public class WeaponListItem : MonoBehaviour
             _button.interactable = false;
         }
 
-        StartCoroutine(TimerModule.SetDelayFunc(DelayedReload, _reloadDelayTime));
+        StartCoroutine(Timer.SetDelayFunc(DelayedReload, _reloadDelayTime));
     }
 
     #endregion

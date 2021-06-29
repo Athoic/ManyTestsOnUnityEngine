@@ -71,7 +71,7 @@ namespace Repository
 
         public int capacity{get;set;}
 
-        public List<Arms> favor{get;set;}
+        public long single_interval{get;set;}
 
     }
 }

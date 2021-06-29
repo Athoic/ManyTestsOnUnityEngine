@@ -44,5 +44,14 @@ namespace Repository
 
             return config.single_amount;
         }
+
+        public long GetSingleInterval(long PK)
+        {
+            var config = GetByPK(PK);
+            if (config == null)
+                return 0;
+
+            return config.single_interval;
+        }
     }
 }
