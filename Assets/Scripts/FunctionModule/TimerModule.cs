@@ -40,7 +40,7 @@ namespace FunctionModule
         /// 获取一个循环定时器
         /// </summary>
         /// <param name="action">循环执行的方法</param>
-        /// <param name="interval">间隔时间</param>
+        /// <param name="interval">间隔时间。单位：毫秒</param>
         /// <param name="loopCount">循环次数。若此值不为自然数，则没有循环次数限制</param>
         /// <param name="delayTime">开始计时前的延迟时间。</param>
         public Timer(Action action, long interval, int loopCount=-1,long delayTime=0)
@@ -80,7 +80,8 @@ namespace FunctionModule
         {
             if (_delayTime <= 0) 
             {
-                TimerState = ETimerState.Started;
+                if(TimerState==ETimerState.Ready)
+                    TimerState = ETimerState.Started;
                 return true;
             }
 
@@ -88,7 +89,7 @@ namespace FunctionModule
                 return false;
             
             TimerState = ETimerState.Started;
-            _loopFunc.Invoke();
+            _loopFunc?.Invoke();
             _count++;
             _delayTime = 0;
             _passedTime = 0;
@@ -109,14 +110,16 @@ namespace FunctionModule
             if (_passedTime < _interval)
                 return;
 
-            _loopFunc.Invoke();
+            _loopFunc?.Invoke();
             _count++;
-            _passedTime -= _interval;
+            _passedTime = 0;
         }
     
         public void EndLoop()
         {
             TimerState = ETimerState.Ended;
+            _loopFunc = null;
+            _unityClockModule.FrameUpdateEvent -= UnityClockModule_FrameUpdateEvent;
         }
     }
 
