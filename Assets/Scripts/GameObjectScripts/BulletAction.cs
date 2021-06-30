@@ -1,4 +1,5 @@
 using CustomedTest.DataObjects;
+using EventArgs.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,10 @@ public class BulletAction : MonoBehaviour
 
     [HideInInspector] public int HorizentalDirect=1;
 
+    private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
+
     private Rigidbody2D _bulletRigidBody;
+    private BulletData _bulletData;
 
     private static readonly Vector2 _bulletRightDirect = new Vector2(1, 0);
     private static readonly Vector2 _bulletLeftDirect = new Vector2(-1, 0);
@@ -28,6 +32,7 @@ public class BulletAction : MonoBehaviour
     private void Awake()
     {
         _bulletRigidBody = GetComponent<Rigidbody2D>();
+        _bulletData = GetComponent<BulletData>();
     }
 
     // Start is called before the first frame update
@@ -53,9 +58,17 @@ public class BulletAction : MonoBehaviour
     {
         Debug.Log("子弹撞击到：" + collision.gameObject.tag);
 
+
+
         switch (collision.gameObject.tag)
         {
             case "Enemy":
+                CauseDamageEventArgs eventArgs = new CauseDamageEventArgs();
+                eventArgs.Target = collision.gameObject;
+                eventArgs.DamageDO = _bulletData.NumericDamage;
+                _battleEventSystem.DispatchCauseDamageEvent(eventArgs);
+                Destroy(gameObject);
+                break;
             case "Ground":
                 Destroy(gameObject);
                 break;

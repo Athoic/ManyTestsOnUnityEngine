@@ -1,3 +1,4 @@
+using CustomedTest.DataObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace EventArgs.Battle
         /// </summary>
         public GameObject Target { get; set; }
 
-        public int Damage { get; set; }
+        public BaseDamageDO DamageDO { get; set; }
     }
 
 }

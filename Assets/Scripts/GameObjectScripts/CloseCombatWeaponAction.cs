@@ -1,3 +1,4 @@
+using CustomedTest.DataObjects;
 using EventArgs.Battle;
 using FunctionModule;
 using System;
@@ -8,8 +9,10 @@ using UnityEngine;
 public class CloseCombatWeaponAction : MonoBehaviour
 {
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
-
+    
     private Animator _animator;
+
+    
     private bool _canCauseDamage { get; set; } = false;
 
     private int _startActionOrder = 0;
@@ -30,7 +33,7 @@ public class CloseCombatWeaponAction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameObject
     }
 
     // Update is called once per frame
@@ -43,9 +46,11 @@ public class CloseCombatWeaponAction : MonoBehaviour
     {
         if (!_canCauseDamage) return;
 
+        NumericDamageDO numericDamage = new NumericDamageDO();
+        numericDamage.TotalDamage = 10;
         CauseDamageEventArgs e = new CauseDamageEventArgs();
         e.Target = collision.gameObject;
-        e.Damage = 10;
+        e.DamageDO = numericDamage;
         _battleEventSystem.DispatchCauseDamageEvent(e);
         //Debug.Log("造成近战伤害");
     }

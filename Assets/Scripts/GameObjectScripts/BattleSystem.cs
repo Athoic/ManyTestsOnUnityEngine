@@ -35,13 +35,13 @@ public class BattleSystem : MonoBehaviour
         
     }
 
-    public void ShowDamage(Transform spawnPoint,long damage)
+    public void ShowDamage(Transform spawnPoint,double damage)
     {
         //Vector3 damagePos = spawnPoint.position;
         //damagePos.x += Random.Range(-0.5f, 0.5f);
         //damagePos.y += Random.Range(-0.5f, 0.5f);
-        GameObject damageObject = Instantiate(DamageDigitPrefab, spawnPoint.position, transform.rotation);
-        damageObject.GetComponentInChildren<DamageDigit>().Damage = damage;
+        //GameObject damageObject = Instantiate(DamageDigitPrefab, spawnPoint.position, transform.rotation);
+        //damageObject.GetComponentInChildren<DamageDigit>().Damage = damage;
     }
 
     public static BattleSystem GetBattleSystem()

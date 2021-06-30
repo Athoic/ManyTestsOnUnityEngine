@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class WeaponListItem : MonoBehaviour
 {
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
-    private weaponRepository _weaponRepository = weaponRepository.GetInstance();
+    private LongRangeWeaponRepository _longRangeWeaponRepository = LongRangeWeaponRepository.GetInstance();
 
     private const string _playerPawnGameObjectName = "GameObjectSelf(Clone)";
     private PawnData _pawnData;
@@ -52,7 +52,7 @@ public class WeaponListItem : MonoBehaviour
         _pawnData = GameObject.Find(_playerPawnGameObjectName).GetComponent<PawnData>();
 
         _weaponName.text = WeaponName;
-        UpdateReloadProgress(_weaponRepository.GetCapacity(WeaponID));
+        UpdateReloadProgress(_longRangeWeaponRepository.GetCapacity(WeaponID));
     }
 
     // Update is called once per frame
@@ -91,7 +91,7 @@ public class WeaponListItem : MonoBehaviour
 
         _isReloadingAmmo = false;
 
-        int capacity=_weaponRepository.GetCapacity(WeaponID);
+        int capacity=_longRangeWeaponRepository.GetCapacity(WeaponID);
 
         float rate = (float)eventArgs.Remain / (float)capacity;
         _slider.value = rate;
@@ -121,10 +121,10 @@ public class WeaponListItem : MonoBehaviour
 
         if (_slider.value == 1) return;
 
-        int weaponCapacity = _weaponRepository.GetCapacity(WeaponID);
+        int weaponCapacity = _longRangeWeaponRepository.GetCapacity(WeaponID);
         int oldCount =(int)( _slider.value * weaponCapacity);
         
-        float rate = (float)_weaponRepository.GetReloadVelocity(WeaponID) / (float)weaponCapacity;
+        float rate = (float)_longRangeWeaponRepository.GetReloadVelocity(WeaponID) / (float)weaponCapacity;
         _slider.value += Time.deltaTime * rate;
         
         int newCount=(int)(_slider.value * weaponCapacity);
@@ -133,14 +133,14 @@ public class WeaponListItem : MonoBehaviour
         
         _pawnData.UpdateAmmoCount(WeaponID, newCount);
         UpdateReloadProgress(newCount);
-        if (newCount >= _weaponRepository.GetSingleFireCount(WeaponID))
+        if (newCount >= _longRangeWeaponRepository.GetSingleFireCount(WeaponID))
             _button.interactable = true;
 
     }
 
     private void UpdateReloadProgress(int newCount)
     {
-        _weaponReloadProgressText.text = string.Format(_reloadProgressFormat, newCount, _weaponRepository.GetCapacity(WeaponID));
+        _weaponReloadProgressText.text = string.Format(_reloadProgressFormat, newCount, _longRangeWeaponRepository.GetCapacity(WeaponID));
 
     }
 

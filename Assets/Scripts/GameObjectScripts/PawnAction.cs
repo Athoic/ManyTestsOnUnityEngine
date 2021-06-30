@@ -15,7 +15,7 @@ public class PawnAction : MonoBehaviour
     [SerializeField] private int _jumpPointLayer = 0;
 
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
-    private weaponRepository _weaponRepository = weaponRepository.GetInstance();
+    private LongRangeWeaponRepository _longRangeWeaponRepository = LongRangeWeaponRepository.GetInstance();
 
     public List<GameObject> RangedWeaponList;
     private PawnData _pawnData;
@@ -139,7 +139,7 @@ public class PawnAction : MonoBehaviour
         //if (!_isFiring) return;
 
         WeaponDataDO weaponDataDO = _pawnData.GetWeaponDataDO(weaponID);
-        if (weaponDataDO.Remain < _weaponRepository.GetSingleFireCount(weaponID)) 
+        if (weaponDataDO.Remain < _longRangeWeaponRepository.GetSingleFireCount(weaponID)) 
             return;
 
         Timer timer = new Timer(() => 
@@ -147,14 +147,20 @@ public class PawnAction : MonoBehaviour
             Vector3 rawSpawnPos = _bulletBornPoint.transform.position;
             Vector3 bulletSpawnPoint = new Vector3(rawSpawnPos.x, rawSpawnPos.y + Random.Range(-0.2f, 0.2f), rawSpawnPos.z);
             GameObject bullet = Instantiate(_bullet, bulletSpawnPoint, _bulletBornPoint.transform.rotation);
-            bullet.GetComponent<BulletAction>().HorizentalDirect = _orientationValue;
+            
+            BulletAction bulletAction = bullet.GetComponent<BulletAction>();
+            bulletAction.HorizentalDirect = _orientationValue;
+            
+            BulletData bulletData = bullet.GetComponent<BulletData>();
+            bulletData.NumericDamage = _pawnData.GetNumericDamageDO(weaponDataDO);
+            bulletData.WeaponType = weaponDataDO.WeaponType;
+            bulletData.WeaponFireType = weaponDataDO.WeaponFireType;
+            bulletData.Element = weaponDataDO.Element;
         },
-        _weaponRepository.GetSingleInterval(weaponID),
+        _longRangeWeaponRepository.GetSingleInterval(weaponID),
         weaponDataDO.SingleFireCount);
 
         timer.StartLoop();
-        //if (!timer.StartLoop())
-        //    Debug.Log("定时器执行失败");
 
         weaponDataDO.Remain-= weaponDataDO.SingleFireCount;
 
@@ -174,4 +180,6 @@ public class PawnAction : MonoBehaviour
         float scaleX = oldScale.x * (-1);
         gameObject.transform.localScale = new Vector3(scaleX, oldScale.y, oldScale.z);
     }
+
+    
 }

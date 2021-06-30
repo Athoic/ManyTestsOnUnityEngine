@@ -3,17 +3,17 @@ using System.IO;
 using System.Web.Script.Serialization;
 namespace Repository
 {
-    public partial class weaponRepository
+    public partial class ArmorUnitRepository
     {
-        private Dictionary<long,weaponItemDO> _configDataMap = new Dictionary<long,weaponItemDO>();
-        private List<weaponItemDO> _configDataList = new List<weaponItemDO>();
+        private Dictionary<long,ArmorUnitItemDO> _configDataMap = new Dictionary<long,ArmorUnitItemDO>();
+        private List<ArmorUnitItemDO> _configDataList = new List<ArmorUnitItemDO>();
 
         public int Count { get {  return _configDataList.Count; } }
 
-        private weaponRepository(){
+        private ArmorUnitRepository(){
                 JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
     
-                FileStream fileStream = new FileStream("weaponJsonConfig.json", FileMode.Open, FileAccess.Read);
+                FileStream fileStream = new FileStream("Assets/Configs/ArmorUnitJsonConfig.json", FileMode.Open, FileAccess.Read);
                 StreamReader streamReader = new StreamReader(fileStream);
                 string jsonData = streamReader.ReadToEnd();
                 Data  configData = javaScriptSerializer.Deserialize(jsonData, typeof(Data)) as Data;
@@ -27,7 +27,7 @@ namespace Repository
             }
 
 
-            public weaponItemDO GetByIndex(int index){
+            public ArmorUnitItemDO GetByIndex(int index){
                 if (_configDataList.Count == 0 || index < 0 || index >= _configDataList.Count)
                     return null;
     
@@ -35,7 +35,7 @@ namespace Repository
             }
 
 
-            public weaponItemDO GetByPK(long PK){
+            public ArmorUnitItemDO GetByPK(long PK){
                 if (_configDataMap.Count == 0 || !_configDataMap.ContainsKey(PK))
                     return null;
     
@@ -43,35 +43,27 @@ namespace Repository
             }
 
 
-            private static weaponRepository _repository;
+            private static ArmorUnitRepository _repository;
 
-        public static weaponRepository GetInstance(){
-                       if (_repository == null) _repository = new weaponRepository();
+        public static ArmorUnitRepository GetInstance(){
+                       if (_repository == null) _repository = new ArmorUnitRepository();
                        return _repository;
             }
 
         class Data{
-            public List<weaponItemDO> data{get;set;}
+            public List<ArmorUnitItemDO> data{get;set;}
         }
     }
 
-    public class weaponItemDO
+    public class ArmorUnitItemDO
     {
         public long id{get;set;}
 
         public string name{get;set;}
 
-        public int type{get;set;}
+        public List<long> long_range_weapon{get;set;}
 
-        public float range{get;set;}
-
-        public int single_amount{get;set;}
-
-        public float fill_time{get;set;}
-
-        public int capacity{get;set;}
-
-        public long single_interval{get;set;}
+        public List<long> close_combat_weapon{get;set;}
 
     }
 }

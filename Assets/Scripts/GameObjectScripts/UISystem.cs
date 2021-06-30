@@ -10,21 +10,22 @@ public class UISystem : MonoBehaviour
     [SerializeField] private GameObject _listItem;
     [SerializeField] private GameObject _playerPawn;
 
-    private weaponRepository weaponRepository = weaponRepository.GetInstance();
+    private LongRangeWeaponRepository _longRangeWeaponRepository = LongRangeWeaponRepository.GetInstance();
 
-    private PlayerPawnData _playerPawnData;
+    private const string _playerPawnName = "GameObjectSelf(Clone)";
+    private PawnData _playerPawnData;
     // Start is called before the first frame update
     void Start()
     {
-        _playerPawnData = new PlayerPawnData();
-        List<long> weaponIDs = _playerPawnData.WeaponIDList;
+        _playerPawnData =GameObject.Find(_playerPawnName).GetComponent<PawnData>();
+        List<long> weaponIDs = _playerPawnData.LongRangeWeaponIDs;
         CleanList();
         for(int i=0,count= weaponIDs.Count; i < count; i++)
         {
             WeaponListItem newItem = Instantiate(_listItem, _listContent.transform).GetComponent<WeaponListItem>();
             newItem.WeaponID = weaponIDs[i];
             newItem.Index = i;
-            newItem.WeaponName = weaponRepository.GetName(weaponIDs[i]);
+            newItem.WeaponName = _longRangeWeaponRepository.GetName(weaponIDs[i]);
         }
     }
 

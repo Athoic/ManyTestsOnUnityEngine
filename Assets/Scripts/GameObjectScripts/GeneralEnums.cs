@@ -8,15 +8,6 @@ namespace CustomedTest.Enums
 {
     #region 枚举
 
-    public enum EElement
-    {
-        Normal,
-        Flame,
-        Ice,
-        Electric,
-        Poison,
-    }
-
     public enum EDamageValueType
     {
         Numeric,
@@ -25,6 +16,7 @@ namespace CustomedTest.Enums
 
     public enum EDamageEffectType
     {
+        Undefined,
         None,
         Fixed,
         IgnoreNormalShield,

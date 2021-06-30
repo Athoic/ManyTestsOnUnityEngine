@@ -1,4 +1,5 @@
 using CustomedTest.Enums;
+using Define.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,6 @@ namespace CustomedTest.DataObjects
 
     public class NumericDamageDO : BaseDamageDO
     {
-        public float WeaponBonus = 0;
-        public float CharacterBonus = 0;
-        public float FinalBonus = 0;
-
         public NumericDamageDO()
         {
             ValueType = EDamageValueType.Numeric;

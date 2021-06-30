@@ -8,7 +8,7 @@ public class DamageDigit : MonoBehaviour
 {
     [SerializeField]private float _lastTime = 1;
 
-    public long Damage { get; set; }
+    public double Damage { get; set; }
 
     // Start is called before the first frame update
     void Start()

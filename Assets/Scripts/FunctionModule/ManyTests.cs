@@ -17,6 +17,11 @@ public class ManyTests : MonoBehaviour
         
     }
 
+    #region 定时器测试
+    /// <summary>
+    /// 定时器个数
+    /// </summary>
+    private const int _timerCount = 10;
     private List<Timer> timers = new List<Timer>();
     private bool _isListClean=true;
     private int _timerIndex = 0;
@@ -33,7 +38,7 @@ public class ManyTests : MonoBehaviour
         }
 
         timers.Clear();
-        for (int i=0; i < 5; i++)
+        for (int i=0; i < _timerCount; i++)
         {
             TimerTest timerTest =new TimerTest(_timerIndex++);
             Timer timer = new Timer(() =>
@@ -71,4 +76,5 @@ public class ManyTests : MonoBehaviour
         }
     }
 
+    #endregion
 }

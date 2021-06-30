@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public partial class weaponRepository
+    public partial class LongRangeWeaponRepository
     {
         public int GetCapacity(long PK)
         {
