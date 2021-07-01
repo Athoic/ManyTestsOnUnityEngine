@@ -41,6 +41,15 @@ public class BulletAction : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+    }
+
+    private void OnDisable()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -78,7 +87,7 @@ public class BulletAction : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("子弹撞击到：" + collision.gameObject.tag);
+        Debug.Log("子弹触及到：" + collision.gameObject.tag);
 
         //if(collision.gameObject.tag=="Enemy")
         //    Destroy(gameObject);

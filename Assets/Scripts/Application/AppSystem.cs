@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class AppSystem : MonoBehaviour
 {
+    private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
+
+
     private void Awake()
     {
-        BattleEventSystem battleEventSystem = BattleEventSystem.GetInstance();
     }
 
     // Start is called before the first frame update

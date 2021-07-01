@@ -4,9 +4,11 @@ using Define.Enum;
 using EventArgs.Battle;
 using Project.Helper;
 using Repository;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class PawnData : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public partial class PawnData : MonoBehaviour
     private ArmorUnitRepository _armorUnitRepository = ArmorUnitRepository.GetInstance();
 
     public long ArmorUnitID;
+
+    [HideInInspector] public string GUID { get; } = Guid.NewGuid().ToString();
 
     private HealthPointDO healthPointDO;
     private DamageBonusAndReductionsDO _damageBonusAndReductionsDO = new DamageBonusAndReductionsDO();
@@ -30,6 +34,12 @@ public partial class PawnData : MonoBehaviour
     #region 生命周期
 
     private void Awake()
+    {
+
+    }
+
+    // Start is called before the first frame update
+    void Start()
     {
         healthPointDO = new HealthPointDO(100);
 
@@ -54,11 +64,11 @@ public partial class PawnData : MonoBehaviour
         }
 
         CloseCombatWeaponIDs = _armorUnitRepository.GetCloseCombatWeaponIDs(ArmorUnitID);
-    }
+        //CloseCombatWeaponAction closeCombatWeaponAction = GetComponentInChildren<CloseCombatWeaponAction>();
+        //closeCombatWeaponAction.RefreshCloseCombatWeapon();
 
-    // Start is called before the first frame update
-    void Start()
-    {
+        GameObjectHelper.FindChild(this.gameObject, "ArmorName").GetComponent<Text>().text = _armorUnitRepository.GetArmorName(ArmorUnitID);
+
 
     }
 
@@ -66,10 +76,6 @@ public partial class PawnData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (LongRangeWeaponIDs == null)
-        {
-            Debug.Log("错误的ArmorID：" + ArmorUnitID);
-        }
 
     }
 
@@ -185,6 +191,8 @@ public partial class PawnData : MonoBehaviour
             _damageBonusAndReductionsDO.FinalDamageBonus);
         return numericDamage;
     }
+
+
 
     #endregion
 

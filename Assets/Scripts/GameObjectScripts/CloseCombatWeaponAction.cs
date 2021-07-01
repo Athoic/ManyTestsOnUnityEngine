@@ -1,6 +1,8 @@
 using CustomedTest.DataObjects;
 using EventArgs.Battle;
 using FunctionModule;
+using Project.Helper;
+using Repository;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,10 +11,12 @@ using UnityEngine;
 public class CloseCombatWeaponAction : MonoBehaviour
 {
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
-    
+    private CloseCombatWeaponRepository _closeCombatWeaponRepository = CloseCombatWeaponRepository.GetInstance();
+
     private Animator _animator;
 
-    
+    private PawnData _pawnData;
+
     private bool _canCauseDamage { get; set; } = false;
 
     private int _startActionOrder = 0;
@@ -28,12 +32,16 @@ public class CloseCombatWeaponAction : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
+        _pawnData = transform.parent.parent.GetComponent<PawnData>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject
+        string prefabName = _closeCombatWeaponRepository.GetPrefabName(_pawnData.CloseCombatWeaponIDs[0]);
+        GameObject prefab = PrefabHelper.GetPrefabInGameObject(prefabName);
+        Instantiate(prefab, transform);
+
     }
 
     // Update is called once per frame
@@ -104,5 +112,9 @@ public class CloseCombatWeaponAction : MonoBehaviour
         _actionOrder = _startActionOrder;
 
         _isCloseCombatAnimClosed = true;
+    }
+
+    public void RefreshCloseCombatWeapon()
+    {
     }
 }

@@ -69,5 +69,7 @@ namespace Repository
 
         public int close_combat_damage_type{get;set;}
 
+        public string prefab_name{get;set;}
+
     }
 }

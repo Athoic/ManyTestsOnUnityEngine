@@ -76,6 +76,7 @@ public class WeaponListItem : MonoBehaviour
 
         WeaponFireEventArgs param = new WeaponFireEventArgs()
         {
+            PawnID = _pawnData.GUID,
             WeaponID = this.WeaponID,
         };
         _battleEventSystem.DispatchWeaponFireEvent(param);

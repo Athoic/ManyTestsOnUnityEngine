@@ -2,6 +2,7 @@ using EventArgs.Battle;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FunctionModule;
 
 public class BattleEventSystem
 {
@@ -39,6 +40,20 @@ public class BattleEventSystem
         CauseDamageEvent.Invoke(args);
     }
 
+
+    #endregion
+
+    #region 锁定攻击目标
+
+    public delegate void LockOnTargetEventHandler(LockOnTargetEventArgs eventArgs);
+    public event LockOnTargetEventHandler LockOnTargetEvent;
+
+    public void DispatchLockOnTargetEvent(string pawnGUID)
+    {
+        LockOnTargetEventArgs e = new LockOnTargetEventArgs();
+        e.PawnGUID = pawnGUID;
+        LockOnTargetEvent.Invoke(e);
+    }
 
     #endregion
 

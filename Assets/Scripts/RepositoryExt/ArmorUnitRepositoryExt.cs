@@ -25,5 +25,14 @@ namespace Repository
 
             return config.close_combat_weapon;
         }
+    
+        public string GetArmorName(long PK)
+        {
+            var config = GetByPK(PK);
+            if (config == null)
+                return string.Empty;
+
+            return config.name;
+        }
     }
 }

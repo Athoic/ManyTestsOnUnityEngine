@@ -8,11 +8,20 @@ using UnityEngine;
 
 namespace EventArgs.Battle
 {
+    
+
     public class WeaponFireEventArgs
     {
+        /// <summary>
+        /// 开火单位
+        /// </summary>
+        public string PawnID { get; set; }
+
+        /// <summary>
+        /// 开火的武器
+        /// </summary>
         public long WeaponID { get; set; }
 
-        public int WeaponIndex { get; set; }
     }
 
     public class WeaponFireSuccessEventArgs
@@ -35,4 +44,8 @@ namespace EventArgs.Battle
         public BaseDamageDO DamageDO { get; set; }
     }
 
+    public class LockOnTargetEventArgs
+    {
+        public string PawnGUID { get; set; }
+    }
 }

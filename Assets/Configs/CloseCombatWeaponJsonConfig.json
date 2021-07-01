@@ -1,1 +1,1 @@
-{"data":[{"id":12,"name":光束剑,"range":2,"damage":10,"element":2,"close_combat_damage_type":2}]}
+{"data":[{"id":12,"name":"光束剑","range":2,"damage":10,"element":2,"close_combat_damage_type":2,"prefab_name":"BeamSaber"},{"id":22,"name":"Calibur","range":2,"damage":8,"element":1,"close_combat_damage_type":2,"prefab_name":"Calibur"}]}
