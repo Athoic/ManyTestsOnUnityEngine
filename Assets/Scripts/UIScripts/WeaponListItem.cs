@@ -1,3 +1,4 @@
+using Define;
 using EventArgs.Battle;
 using FunctionModule;
 using Project.Helper;
@@ -12,7 +13,6 @@ public class WeaponListItem : MonoBehaviour
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
     private LongRangeWeaponRepository _longRangeWeaponRepository = LongRangeWeaponRepository.GetInstance();
 
-    private const string _playerPawnGameObjectName = "GameObjectSelf(Clone)";
     private PawnData _pawnData;
 
     private Slider _slider;
@@ -49,7 +49,7 @@ public class WeaponListItem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _pawnData = GameObject.Find(_playerPawnGameObjectName).GetComponent<PawnData>();
+        _pawnData = GameObject.Find(GameValueDefine.PLAYER_GAME_OBJECT_NAME).GetComponent<PawnData>();
 
         _weaponName.text = WeaponName;
         UpdateReloadProgress(_longRangeWeaponRepository.GetCapacity(WeaponID));

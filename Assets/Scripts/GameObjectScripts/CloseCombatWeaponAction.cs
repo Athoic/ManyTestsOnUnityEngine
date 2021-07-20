@@ -32,7 +32,7 @@ public class CloseCombatWeaponAction : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
-        _pawnData = transform.parent.parent.GetComponent<PawnData>();
+        _pawnData = transform.parent.parent.transform.GetComponent<PawnData>();
     }
 
     // Start is called before the first frame update

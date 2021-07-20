@@ -15,12 +15,16 @@ public partial class PawnData : MonoBehaviour
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
     private LongRangeWeaponRepository _longRangeWeaponRepository = LongRangeWeaponRepository.GetInstance();
     private ArmorUnitRepository _armorUnitRepository = ArmorUnitRepository.GetInstance();
+    private PawnForPlayer _playerPawn;
 
     public long ArmorUnitID;
 
-    [HideInInspector] public string GUID { get; } = Guid.NewGuid().ToString();
+    public string GUID { get; } = Guid.NewGuid().ToString();
 
-    private HealthPointDO healthPointDO;
+    public HealthPointDO HealthPointDO { get; private set; }
+    public bool IsBeenLockedOn { get; private set; }
+    public string TargetGuid { get; set; }
+    
     private DamageBonusAndReductionsDO _damageBonusAndReductionsDO = new DamageBonusAndReductionsDO();
 
     public List<long> LongRangeWeaponIDs { get; private set; }
@@ -35,13 +39,12 @@ public partial class PawnData : MonoBehaviour
 
     private void Awake()
     {
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        healthPointDO = new HealthPointDO(100);
+        HealthPointDO = new HealthPointDO(1000);
 
         LongRangeWeaponIDs = _armorUnitRepository.GetLongRangeWeaponIDs(ArmorUnitID);
         for (int i = 0, count = LongRangeWeaponIDs.Count; i < count; i++)
@@ -82,12 +85,16 @@ public partial class PawnData : MonoBehaviour
     private void OnEnable()
     {
         _battleEventSystem.CauseDamageEvent += BattleEventSystem_CauseDamageEvent;
+        _battleEventSystem.LockOnTargetEvent += BattleEventSystem_LockOnTargetEvent;
+
 
     }
+
 
     private void OnDisable()
     {
         _battleEventSystem.CauseDamageEvent -= BattleEventSystem_CauseDamageEvent;
+        _battleEventSystem.LockOnTargetEvent -= BattleEventSystem_LockOnTargetEvent;
 
     }
 
@@ -100,6 +107,20 @@ public partial class PawnData : MonoBehaviour
         if (args.Target != this.gameObject) return;
 
         BattleSystem.GetBattleSystem().ShowDamage(this.gameObject.transform, args.DamageDO.TotalDamage);
+
+        PlayerGotDamage(args.DamageDO);
+
+    }
+    private void BattleEventSystem_LockOnTargetEvent(LockOnTargetEventArgs eventArgs)
+    {
+        if (eventArgs.PawnGUID != GUID)
+        {
+            IsBeenLockedOn = false;
+        }
+        else
+        {
+            IsBeenLockedOn = true;
+        }
     }
 
 
@@ -113,11 +134,6 @@ public partial class PawnData : MonoBehaviour
             return _weaponMap[weaponID];
         else
             return null;
-    }
-
-    public void GotDamage()
-    {
-
     }
 
     public void UpdateAmmoCount(long weaponID,int newCount)
@@ -192,7 +208,15 @@ public partial class PawnData : MonoBehaviour
         return numericDamage;
     }
 
+    public void PlayerGotDamage(BaseDamageDO damage)
+    {
+        HealthPointDO.ReduceHP(damage.TotalDamage);
 
+        if (HealthPointDO.CurrentHP == 0)
+        {
+            _battleEventSystem.DispatchPawnDeadEvent(GUID);
+        }
+    }
 
     #endregion
 

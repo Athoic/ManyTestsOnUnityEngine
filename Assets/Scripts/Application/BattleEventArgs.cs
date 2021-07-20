@@ -47,5 +47,13 @@ namespace EventArgs.Battle
     public class LockOnTargetEventArgs
     {
         public string PawnGUID { get; set; }
+
     }
+
+    public class PawnDeadEventArgs
+    {
+        public string PawnGUID { get; set; }
+
+    }
+
 }

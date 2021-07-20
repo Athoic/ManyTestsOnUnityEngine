@@ -8,26 +8,14 @@ public class BulletAction : MonoBehaviour
 {
     [SerializeField]public float MoveSpeed=2;
 
-    [HideInInspector] public int HorizentalDirect=1;
+    [HideInInspector] public Vector3 Target;
 
     private BattleEventSystem _battleEventSystem = BattleEventSystem.GetInstance();
 
     private Rigidbody2D _bulletRigidBody;
     private BulletData _bulletData;
 
-    private static readonly Vector2 _bulletRightDirect = new Vector2(1, 0);
-    private static readonly Vector2 _bulletLeftDirect = new Vector2(-1, 0);
-
-    private Vector2 _bulletDirect 
-    { 
-        get 
-        {
-            if (HorizentalDirect >= 0)
-                return _bulletRightDirect;
-            else
-                return _bulletLeftDirect;
-        }
-    }
+    private Vector3 _direct;
 
     private void Awake()
     {
@@ -38,7 +26,10 @@ public class BulletAction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (Target == Vector3.right || Target == Vector3.left)
+            _direct = Target;
+        else
+            _direct = (Target - transform.position).normalized;
     }
 
     private void OnEnable()
@@ -58,7 +49,7 @@ public class BulletAction : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _bulletRigidBody.velocity = _bulletDirect * MoveSpeed;
+        _bulletRigidBody.velocity = _direct * MoveSpeed;
         //transform.position += _bulletDirect * MoveSpeed * Time.deltaTime;
 
     }

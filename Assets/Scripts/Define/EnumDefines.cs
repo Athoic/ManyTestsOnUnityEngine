@@ -114,4 +114,16 @@ namespace Define.Enum
         /// </summary>
         Sharp,
     }
+
+    /// <summary>
+    /// 方位
+    /// </summary>
+    public enum EOrientation
+    {
+        Undefined,
+        Top,
+        Right,
+        Botton,
+        Left,
+    }
 }

@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7186110281670409151}
   - component: {fileID: 7186110281670409150}
-  - component: {fileID: 7186110281670409145}
   - component: {fileID: 7186110281670409144}
   - component: {fileID: 174459250605170224}
-  - component: {fileID: 159044143646719712}
+  - component: {fileID: 9191810323324209996}
+  - component: {fileID: 3096225713172501358}
   m_Layer: 10
   m_Name: BulletPrefab
   m_TagString: Bullet
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7186110281670409148}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.73, y: 0.26, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -85,22 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &7186110281670409145
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7186110281670409148}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.1
 --- !u!114 &7186110281670409144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c71bf70de044fdb46a932471cd4877e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!50 &159044143646719712
+--- !u!50 &9191810323324209996
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -148,3 +132,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &3096225713172501358
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7186110281670409148}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.1

@@ -38,5 +38,10 @@ namespace Project.Helper
             return false;
 
         }
+    
+        public static Vector3 GetMouseClickScreenPoint()
+        {
+            return Camera.main.WorldToScreenPoint(Input.mousePosition);
+        }
     }
 }

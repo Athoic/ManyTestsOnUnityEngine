@@ -57,6 +57,20 @@ public class BattleEventSystem
 
     #endregion
 
+    #region 单位阵亡
+
+    public delegate void PawnDeadEventHandler(PawnDeadEventArgs eventArgs);
+    public event PawnDeadEventHandler PawnDeadEvent;
+
+    public void DispatchPawnDeadEvent(string pawnGUID)
+    {
+        PawnDeadEventArgs e = new PawnDeadEventArgs();
+        e.PawnGUID = pawnGUID;
+        PawnDeadEvent?.Invoke(e);
+    }
+
+    #endregion
+
     #region 限制此类为单例
 
     private BattleEventSystem() { }
