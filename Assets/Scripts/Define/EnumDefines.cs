@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Define.Enum
 {
     /// <summary>
@@ -100,6 +94,9 @@ namespace Define.Enum
         Corrosion,
     }
 
+    /// <summary>
+    /// 近战武器伤害类型
+    /// </summary>
     public enum ECloseCombatDamageType
     {
         Undefined,
@@ -116,14 +113,32 @@ namespace Define.Enum
     }
 
     /// <summary>
+    /// 子弹类型
+    /// </summary>
+    public enum EAmmoType
+    {
+        Undefined,
+        
+        /// <summary>
+        /// 实弹
+        /// </summary>
+        SolidAmmon,
+
+        /// <summary>
+        /// 光束
+        /// </summary>
+        Beam,
+    }
+
+    /// <summary>
     /// 方位
     /// </summary>
     public enum EOrientation
     {
         Undefined,
-        Top,
+        Up,
         Right,
-        Botton,
+        Down,
         Left,
     }
 }

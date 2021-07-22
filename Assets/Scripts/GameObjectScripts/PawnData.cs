@@ -62,6 +62,7 @@ public partial class PawnData : MonoBehaviour
             weaponDataDO.Element = (EElement)config.element;
             weaponDataDO.WeaponType = (EWeaponType)config.weapon_type;
             weaponDataDO.WeaponFireType = (EWeaponFireType)config.fire_type;
+            weaponDataDO.AmmoType = (EAmmoType)config.ammo_type;
 
             _weaponMap.Add(config.id, weaponDataDO);
         }
@@ -106,9 +107,9 @@ public partial class PawnData : MonoBehaviour
     {
         if (args.Target != this.gameObject) return;
 
-        BattleSystem.GetBattleSystem().ShowDamage(this.gameObject.transform, args.DamageDO.TotalDamage);
+        BattleSystem.GetInstance().ShowDamage(this.gameObject.transform, args.DamageDO.TotalDamage);
 
-        PlayerGotDamage(args.DamageDO);
+        PawnGotDamage(args.DamageDO);
 
     }
     private void BattleEventSystem_LockOnTargetEvent(LockOnTargetEventArgs eventArgs)
@@ -208,7 +209,7 @@ public partial class PawnData : MonoBehaviour
         return numericDamage;
     }
 
-    public void PlayerGotDamage(BaseDamageDO damage)
+    public void PawnGotDamage(BaseDamageDO damage)
     {
         HealthPointDO.ReduceHP(damage.TotalDamage);
 
@@ -245,4 +246,6 @@ public class WeaponDataDO
     public EWeaponType WeaponType { get; set; }
 
     public EWeaponFireType WeaponFireType { get; set; }
+
+    public EAmmoType AmmoType { get; set; }
 }

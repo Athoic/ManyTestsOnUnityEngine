@@ -1,12 +1,15 @@
 using CustomedTest.DataObjects;
+using Define.Enum;
 using EventArgs.Battle;
+using Project.Helper;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletAction : MonoBehaviour
 {
-    [SerializeField]public float MoveSpeed=2;
+    public float MoveSpeed=2;
+    public float ScatteringAngle = 30;
 
     [HideInInspector] public Vector3 Target;
 
@@ -17,6 +20,9 @@ public class BulletAction : MonoBehaviour
 
     private Vector3 _direct;
 
+    
+    #region 生命周期
+
     private void Awake()
     {
         _bulletRigidBody = GetComponent<Rigidbody2D>();
@@ -26,10 +32,7 @@ public class BulletAction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (Target == Vector3.right || Target == Vector3.left)
-            _direct = Target;
-        else
-            _direct = (Target - transform.position).normalized;
+        InitBulletDirection();
     }
 
     private void OnEnable()
@@ -54,12 +57,11 @@ public class BulletAction : MonoBehaviour
 
     }
 
+    #endregion
+
+    #region 监听碰撞事件
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("子弹撞击到：" + collision.gameObject.tag);
-
-
-
         switch (collision.gameObject.tag)
         {
             case "Enemy":
@@ -84,4 +86,24 @@ public class BulletAction : MonoBehaviour
         //    Destroy(gameObject);
 
     }
+
+    #endregion
+
+    #region 业务逻辑
+
+    private void InitBulletDirection()
+    {
+        if (Target == Vector3.right || Target == Vector3.left)
+            _direct = Target;
+        else
+            _direct = Target - transform.position;
+
+        if (_bulletData.WeaponFireType == EWeaponFireType.Shotgun)
+        {
+            _direct = MathHelper.RotateVector(_direct, Random.Range(-ScatteringAngle / 2, ScatteringAngle / 2));
+        }
+
+        _direct = _direct.normalized;
+     }
+    #endregion
 }

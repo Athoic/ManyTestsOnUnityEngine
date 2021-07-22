@@ -16,9 +16,12 @@ public class PawnAction : MonoBehaviour
     public float MoveSpeed = 50f;
     [SerializeField] private GameObject _bulletBornPoint;
     [SerializeField] private GameObject _bullet;
+    [SerializeField]private GameObject _beamBullet;
+    [SerializeField] private GameObject _beamBornPoint;
     [SerializeField] private int _jumpPointLayer = 0;
     [SerializeField] private GameObject _healthBar;
     [SerializeField] private GameObject _deadMark;
+    
 
     private BattleSystem _battleSystem;
     private PawnForPlayer _playerPawn;
@@ -37,7 +40,10 @@ public class PawnAction : MonoBehaviour
 
     //private int _horizentalInput = 0;
 
-    public bool IsFacingRight = true;
+    [HideInInspector]public bool IsFacingRight = true;
+
+    private Dictionary<long, GameObject> _id2Beam = new Dictionary<long, GameObject>();
+
     private int _orientationValue
     {
         get
@@ -49,7 +55,7 @@ public class PawnAction : MonoBehaviour
         }
     }
 
-    private GameObject _lockOnTarget = null;
+    private GameObject _lockOnEnemyTarget = null;
     private GameObject _selectedMark;
 
     #region 生命周期
@@ -60,7 +66,7 @@ public class PawnAction : MonoBehaviour
         _pawnData = GetComponent<PawnData>();
         _boxCollider = GetComponent<BoxCollider2D>();
         _closeCombatWeaponAction = GetComponentInChildren<CloseCombatWeaponAction>();
-        _battleSystem = BattleSystem.GetBattleSystem();
+        _battleSystem = BattleSystem.GetInstance();
         _playerPawn = _battleSystem.GetComponent<PawnForPlayer>();
 
         _selectedMark = GameObjectHelper.FindChild(this.gameObject, "SelectedMark");
@@ -97,9 +103,9 @@ public class PawnAction : MonoBehaviour
     {
         Update_ControlPawn();
 
-        if (_lockOnTarget != null)
+        if (_lockOnEnemyTarget != null)
         {
-            Vector3 targetPos = _lockOnTarget.transform.position;
+            Vector3 targetPos = _lockOnEnemyTarget.transform.position;
             if (targetPos.x < transform.position.x && IsFacingRight)
                 Flip();
             else if (targetPos.x > transform.position.x && !IsFacingRight)
@@ -212,10 +218,10 @@ public class PawnAction : MonoBehaviour
         //    //transform.Translate(Vector3.up * _jumpForce * Time.deltaTime, Space.World);
         //}
 
-        //if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _rigidbody.velocity.y - _jumpForce);
-        //}
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            _rigidbody.AddForce(new Vector2(0, -JumpForce));
+        }
 
         //近身攻击
         if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Keypad0))
@@ -262,9 +268,9 @@ public class PawnAction : MonoBehaviour
 
         float x = Input.GetAxis(SystemValueDefine.AxisInputH);
         _rigidbody.velocity = new Vector2(MoveSpeed * x, _rigidbody.velocity.y);
-        if (x < 0 && IsFacingRight && _lockOnTarget==null)
+        if (x < 0 && IsFacingRight && _lockOnEnemyTarget==null)
             Flip();
-        else if (x > 0 && !IsFacingRight && _lockOnTarget == null)
+        else if (x > 0 && !IsFacingRight && _lockOnEnemyTarget == null)
             Flip();
 
         //float y= Input.GetAxis(SystemValueDefine.AxisInputV);
@@ -272,7 +278,9 @@ public class PawnAction : MonoBehaviour
     }
 
     #endregion
-    
+
+    #region 开火
+
     private void Fire(long weaponID)
     {
         //if (!_isFiring) return;
@@ -281,16 +289,38 @@ public class PawnAction : MonoBehaviour
         if (weaponDataDO.Remain < _longRangeWeaponRepository.GetSingleFireCount(weaponID)) 
             return;
 
-        Timer timer = new Timer(() => 
+        switch (weaponDataDO.AmmoType)
+        {
+            case EAmmoType.SolidAmmon:
+                FireSolidAmmo(weaponDataDO);
+                break;
+            case EAmmoType.Beam:
+                FireBeam(weaponDataDO);
+                break;
+
+        }
+
+
+        WeaponFireSuccessEventArgs args = new WeaponFireSuccessEventArgs();
+        args.WeaponID = weaponID;
+        args.Remain = weaponDataDO.Remain;
+        _battleEventSystem.DispatchWeaponFireSuccessEvent(args);
+
+    }
+
+    private void FireSolidAmmo(WeaponDataDO weaponDataDO)
+    {
+        int loopCount = 0;
+        UnityTimer timer = new UnityTimer(() =>
         {
             Vector3 rawSpawnPos = _bulletBornPoint.transform.position;
             Vector3 bulletSpawnPoint = new Vector3(rawSpawnPos.x, rawSpawnPos.y + Random.Range(-0.2f, 0.2f), rawSpawnPos.z);
             GameObject bullet = Instantiate(_bullet, bulletSpawnPoint, _bulletBornPoint.transform.rotation);
-            
+
             BulletAction bulletAction = bullet.GetComponent<BulletAction>();
-            if (_lockOnTarget != null)
+            if (_lockOnEnemyTarget != null)
             {
-                bulletAction.Target = _lockOnTarget.transform.position;
+                bulletAction.Target = _lockOnEnemyTarget.transform.position;
             }
             else
             {
@@ -299,27 +329,68 @@ public class PawnAction : MonoBehaviour
                 else
                     bulletAction.Target = Vector3.left;
             }
-            
+
             BulletData bulletData = bullet.GetComponent<BulletData>();
             bulletData.NumericDamage = _pawnData.GetNumericDamageDO(weaponDataDO);
             bulletData.WeaponType = weaponDataDO.WeaponType;
             bulletData.WeaponFireType = weaponDataDO.WeaponFireType;
             bulletData.Element = weaponDataDO.Element;
+            bulletData.WeaponID = weaponDataDO.ID;
+
+            loopCount++;
+
+            //weaponDataDO.Remain--;
         },
-        _longRangeWeaponRepository.GetSingleInterval(weaponID),
+        _longRangeWeaponRepository.GetSingleInterval(weaponDataDO.ID),
         weaponDataDO.SingleFireCount);
 
         timer.StartLoop();
 
-        weaponDataDO.Remain-= weaponDataDO.SingleFireCount;
-
-        WeaponFireSuccessEventArgs args = new WeaponFireSuccessEventArgs();
-        args.WeaponID = weaponID;
-        args.Remain = weaponDataDO.Remain;
-        _battleEventSystem.DispatchWeaponFireSuccessEvent(args);
-
+        weaponDataDO.Remain -= weaponDataDO.SingleFireCount;
 
     }
+
+    private void FireBeam(WeaponDataDO weaponDataDO)
+    {
+        if (_id2Beam.ContainsKey(weaponDataDO.ID))
+            return;
+
+        Vector3 bulletSpawnPoint = _bulletBornPoint.transform.position;
+        GameObject beamBullet = Instantiate(_beamBullet, _beamBornPoint.transform);
+        BeamBulletAction bulletAction = beamBullet.GetComponent<BeamBulletAction>();
+        if (_lockOnEnemyTarget != null)
+        {
+            bulletAction.Init(_lockOnEnemyTarget, this.gameObject);
+        }
+        else
+        {
+            if (IsFacingRight)
+                bulletAction.Init(EOrientation.Right, this.gameObject);
+            else
+                bulletAction.Init(EOrientation.Left, this.gameObject);
+        }
+
+        BulletData bulletData = beamBullet.GetComponent<BulletData>();
+        bulletData.NumericDamage = _pawnData.GetNumericDamageDO(weaponDataDO);
+        bulletData.WeaponType = weaponDataDO.WeaponType;
+        bulletData.WeaponFireType = weaponDataDO.WeaponFireType;
+        bulletData.Element = weaponDataDO.Element;
+        bulletData.WeaponID = weaponDataDO.ID;
+        
+        _id2Beam.Add(weaponDataDO.ID, beamBullet);
+
+        StartCoroutine(UnityTimer.SetDelayFunc(() =>
+        {
+            Destroy(beamBullet);
+            _id2Beam.Remove(weaponDataDO.ID);
+
+        }, weaponDataDO.SingleFireCount * GameValueDefine.BEAM_AMMO_LAST_TIME));
+
+        weaponDataDO.Remain -= weaponDataDO.SingleFireCount;
+
+    }
+
+    #endregion
 
     private void Flip()
     {
@@ -344,9 +415,9 @@ public class PawnAction : MonoBehaviour
         switch (orientation)
         {
             case EOrientation.Right:
-                return LockOnTarget(_battleSystem.GetRightClosestAliveEnemyPawn(_lockOnTarget));
+                return LockOnTarget(_battleSystem.GetRightClosestAliveEnemyPawn(_lockOnEnemyTarget));
             case EOrientation.Left:
-                return LockOnTarget(_battleSystem.GetLeftClosestAliveEnemyPawn(_lockOnTarget));
+                return LockOnTarget(_battleSystem.GetLeftClosestAliveEnemyPawn(_lockOnEnemyTarget));
             default:
                 return false;
         }
@@ -356,7 +427,7 @@ public class PawnAction : MonoBehaviour
 
     public void CancelLockOn()
     {
-        _lockOnTarget = null;
+        _lockOnEnemyTarget = null;
         _pawnData.TargetGuid = string.Empty;
         _battleEventSystem.DispatchLockOnTargetEvent(string.Empty);
     }
@@ -372,7 +443,7 @@ public class PawnAction : MonoBehaviour
             return false;
         }
 
-        _lockOnTarget = target;
+        _lockOnEnemyTarget = target;
         PawnData pawnData = target.GetComponent<PawnData>();
         _battleEventSystem.DispatchLockOnTargetEvent(pawnData.GUID);
 

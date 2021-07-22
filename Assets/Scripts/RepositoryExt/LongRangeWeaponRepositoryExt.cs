@@ -1,3 +1,4 @@
+using Define.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,15 @@ namespace Repository
                 return 0;
 
             return config.single_interval;
+        }
+
+        public EAmmoType GetAmmonType(long PK)
+        {
+            var config = GetByPK(PK);
+            if (config == null)
+                return EAmmoType.Undefined;
+
+            return (EAmmoType)config.ammo_type;
         }
     }
 }

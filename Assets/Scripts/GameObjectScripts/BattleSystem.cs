@@ -1,5 +1,6 @@
 using AppNode;
 using Define;
+using Define.StringKey;
 using EventArgs.Battle;
 using Project.Helper;
 using System.Collections;
@@ -118,7 +119,7 @@ public class BattleSystem : MonoBehaviour
         //damagePos.x += Random.Range(-0.5f, 0.5f);
         //damagePos.y += Random.Range(-0.5f, 0.5f);
         GameObject damageObject = Instantiate(DamageDigitPrefab, spawnPoint.position, transform.rotation);
-        damageObject.GetComponentInChildren<DamageDigit>().Damage = damage;
+        damageObject.GetComponent<DamageDigitData>().Init(damage);
     }
 
     private IEnumerator FinishLoadBattleSystem()
@@ -128,7 +129,7 @@ public class BattleSystem : MonoBehaviour
         AppEventSystem.GetInstance().DispatchBattleSystemLoadedEvent();
     }
 
-    public static BattleSystem GetBattleSystem()
+    public static BattleSystem GetInstance()
     {
         return BATTLE_SYS_INSTANCE;
     }
@@ -202,7 +203,7 @@ public class BattleSystem : MonoBehaviour
     {
         GameObject enemy = Instantiate(PlayerPrefab, postion, quaternion);
         //GameObject enemyBody = enemy.transform.gameObject;
-        enemy.tag = "Enemy";
+        enemy.tag = TagDefines.Enemy;
         enemy.layer = 11;
         enemy.name = "Enemy(Clone)";
         PawnData enemyData = enemy.GetComponent<PawnData>();

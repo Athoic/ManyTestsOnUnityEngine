@@ -20,7 +20,10 @@ namespace Project.Helper
 
         }
 
-
+        public static Vector3 GetPlayerPawnPosition()
+        {
+            return BattleSystem.GetInstance().PlayerPawn.transform.position;
+        }
 
     }
 }

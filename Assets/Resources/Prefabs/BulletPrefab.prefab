@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 40
-  HorizentalDirect: 1
+  ScatteringAngle: 30
+  Target: {x: 0, y: 0, z: 0}
 --- !u!114 &174459250605170224
 MonoBehaviour:
   m_ObjectHideFlags: 0

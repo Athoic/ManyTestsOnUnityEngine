@@ -13,7 +13,7 @@ namespace Application.GameSettings
         {
             get
             {
-                return Persistence.Read(PersistenceKeys.IsAutoLockOn, false);
+                return Persistence.Read(PersistenceKeys.IsAutoLockOn, true);
             }
             set
             {

@@ -17,6 +17,6 @@ namespace Define
 
         public const string MAIN_CAMERA_NAME = "Main Camera";
 
-
+        public const float BEAM_AMMO_LAST_TIME = 0.5f;
     }
 }

@@ -79,5 +79,7 @@ namespace Repository
 
         public int fire_type{get;set;}
 
+        public int ammo_type{get;set;}
+
     }
 }

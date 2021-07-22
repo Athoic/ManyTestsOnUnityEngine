@@ -22,7 +22,7 @@ public class ManyTests : MonoBehaviour
     /// 定时器个数
     /// </summary>
     private const int _timerCount = 10;
-    private List<Timer> timers = new List<Timer>();
+    private List<UnityTimer> timers = new List<UnityTimer>();
     private bool _isListClean=true;
     private int _timerIndex = 0;
     public void TestTimer()
@@ -41,7 +41,7 @@ public class ManyTests : MonoBehaviour
         for (int i=0; i < _timerCount; i++)
         {
             TimerTest timerTest =new TimerTest(_timerIndex++);
-            Timer timer = new Timer(() =>
+            UnityTimer timer = new UnityTimer(() =>
               {
                   timerTest.ShowTimer();
               },
@@ -59,7 +59,7 @@ public class ManyTests : MonoBehaviour
     {
         private int _index;
 
-        public Timer TimerComponent;
+        public UnityTimer TimerComponent;
 
         private int _execCount = 0;
 

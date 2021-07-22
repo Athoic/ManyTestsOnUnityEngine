@@ -104,7 +104,7 @@ public class WeaponListItem : MonoBehaviour
             _button.interactable = false;
         }
 
-        StartCoroutine(Timer.SetDelayFunc(DelayedReload, _reloadDelayTime));
+        StartCoroutine(UnityTimer.SetDelayFunc(DelayedReload, _reloadDelayTime));
     }
 
     #endregion

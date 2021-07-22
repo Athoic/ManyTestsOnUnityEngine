@@ -114,6 +114,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2869894209731354377
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6135540323894097278}
+  m_Layer: 9
+  m_Name: BeamBornPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6135540323894097278
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2869894209731354377}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.8, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7300734660139376043}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3110803437718360473
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,6 +177,7 @@ Transform:
   - {fileID: 6678441656479719761}
   - {fileID: 1496631783560707400}
   - {fileID: 2428863249558565548}
+  - {fileID: 6135540323894097278}
   m_Father: {fileID: 6678441655089066631}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -950,6 +981,9 @@ MonoBehaviour:
   MoveSpeed: 50
   _bulletBornPoint: {fileID: 6678441656479719762}
   _bullet: {fileID: 7186110281670409148, guid: e7ace93f6fc1e784e87c1390fcc8cb57, type: 3}
+  _beamBullet: {fileID: 833332400311735805, guid: 4cb85be9718015c498cf888b4f730f2b,
+    type: 3}
+  _beamBornPoint: {fileID: 2869894209731354377}
   _jumpPointLayer: 1
   _healthBar: {fileID: 5547827522046795793}
   _deadMark: {fileID: 8606358590147167434}

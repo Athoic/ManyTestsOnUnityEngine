@@ -3,28 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
+using System.Text;
+using Editor.CodeGenerator;
 
 namespace Editor 
 {
     public class EditorTools
     {
+        private const string TAG_ENUM_FILE = "TagDefines";
+        private const string LAYER_ENUM_FILE = "LayerDefines";
+
         [MenuItem("EditorTools/CollectTagsAndLayers", false, 1)]
         public static void CollectTagsAndLayers()
         {
-            string[] tags= InternalEditorUtility.tags;
-
-
-
-            string[] layers=InternalEditorUtility.layers;
+            StringKeyCodeGenerator.GenEnumCode(TAG_ENUM_FILE, InternalEditorUtility.tags);
+            StringKeyCodeGenerator.GenEnumCode(LAYER_ENUM_FILE, InternalEditorUtility.layers);
+            Debug.Log("Tag和Layer的string key生成完成");
         }
-
-        private const string TAGS_DEFINE_PATH = @"Assets\Scripts\Define\TagDefines";
-        private static void GenTagsEnum()
-        {
-
-        }
-
-
     }
 
 

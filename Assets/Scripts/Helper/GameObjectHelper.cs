@@ -15,6 +15,40 @@ namespace Project.Helper
         /// <param name="parent"></param>
         /// <param name="name"></param>
         /// <returns></returns>
+        public static List<GameObject> FindChildrenWithTag(GameObject parent, string tag)
+        {
+            List<GameObject> res = new List<GameObject>();
+
+            foreach (Transform t in parent.GetComponentsInChildren<Transform>())
+            {
+                if (t.tag == tag)
+                {
+                    res.Add(t.gameObject);
+                }
+            }
+            return res;
+        }       
+        
+        public static void DestoryChildrenWithTag(GameObject parent, string tag)
+        {
+            List<GameObject> res = new List<GameObject>();
+
+            foreach (Transform t in parent.GetComponentsInChildren<Transform>())
+            {
+                if (t.tag == tag)
+                {
+                    res.Add(t.gameObject);
+                }
+            }
+            
+            for(int i = 0, count = res.Count; i < count; i++)
+            {
+                
+            }
+        }
+
+
+
         public static GameObject FindChild(GameObject parent, string name)
         {
             GameObject forreturn = null;

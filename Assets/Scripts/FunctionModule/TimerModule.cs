@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace FunctionModule
 {
-    public class Timer
+    public class UnityTimer
     {
         private UnityClockModule _unityClockModule;
 
@@ -43,7 +43,7 @@ namespace FunctionModule
         /// <param name="interval">间隔时间。单位：毫秒</param>
         /// <param name="loopCount">循环次数。若此值不为自然数，则没有循环次数限制</param>
         /// <param name="delayTime">开始计时前的延迟时间。</param>
-        public Timer(Action action, long interval, int loopCount=-1,long delayTime=0)
+        public UnityTimer(Action action, long interval, int loopCount=-1,long delayTime=0)
         {
             _loopFunc = action;
             _interval = interval;
@@ -123,6 +123,9 @@ namespace FunctionModule
         }
     }
 
+    /// <summary>
+    /// 定时器状态
+    /// </summary>
     public enum ETimerState
     {
         Undefine,
